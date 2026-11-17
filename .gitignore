@@ -4,3 +4,5 @@ build
 public/build
 prisma/*.db
 prisma/*.db-journal
+cypress/videos
+cypress/screenshots
