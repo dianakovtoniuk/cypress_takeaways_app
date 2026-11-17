@@ -1,8 +1,9 @@
-import type { ActionArgs } from '@remix-run/node';
+import type { ActionArgs, LoaderArgs } from '@remix-run/node';
 import { json, redirect } from '@remix-run/node';
 import { Form, Link, useNavigate } from '@remix-run/react';
 
 import Modal from '../../components/Modal';
+import { requireUserSession } from '../../data/auth.server';
 import { prisma } from '../../data/prisma.server';
 
 function NewTakeawayRoute() {
@@ -62,6 +63,10 @@ function NewTakeawayRoute() {
 }
 
 export default NewTakeawayRoute;
+
+export function loader({ request }: LoaderArgs) {
+  return requireUserSession(request);
+}
 
 export async function action({ request }: ActionArgs) {
   const fd = await request.formData();

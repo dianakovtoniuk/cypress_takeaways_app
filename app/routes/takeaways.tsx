@@ -1,6 +1,8 @@
+import type { LoaderArgs } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 
 import Takeaways from '../components/Takeaways';
+import { requireUserSession } from '../data/auth.server';
 import { prisma } from '../data/prisma.server';
 
 function TakeawaysLayoutRoute() {
@@ -32,6 +34,8 @@ function TakeawaysLayoutRoute() {
 
 export default TakeawaysLayoutRoute;
 
-export function loader() {
+export async function loader({ request }: LoaderArgs) {
+  await requireUserSession(request);
+
   return prisma.takeaway.findMany();
 }

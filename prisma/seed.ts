@@ -5,6 +5,8 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.user.deleteMany({});
+  await prisma.newsletterSignup.deleteMany({});
   await prisma.takeaway.deleteMany({});
 
   await prisma.takeaway.create({

@@ -1,11 +1,14 @@
-import { Link } from '@remix-run/react';
+import { Form, Link } from '@remix-run/react';
 import type { ReactNode } from 'react';
 
+import NewsletterSignup from './NewsletterSignup';
+
 interface LayoutProps {
+  isLoggedIn: boolean;
   children: ReactNode;
 }
 
-function Layout({ children }: LayoutProps) {
+function Layout({ isLoggedIn, children }: LayoutProps) {
   return (
     <>
       <header className="flex justify-between max-w-5xl mx-auto p-8 items-center">
@@ -22,10 +25,32 @@ function Layout({ children }: LayoutProps) {
                 Takeaways
               </Link>
             </li>
+            {!isLoggedIn && (
+              <li>
+                <Link
+                  to="/login"
+                  className="bg-blue-700 px-4 py-1 rounded-sm hover:bg-blue-600 border-2 border-blue-700 hover:border-blue-600"
+                >
+                  Login
+                </Link>
+              </li>
+            )}
+            {isLoggedIn && (
+              <li>
+                <Form method="post" action="/logout">
+                  <button className="bg-blue-700 px-4 py-1 rounded-sm hover:bg-blue-600">
+                    Logout
+                  </button>
+                </Form>
+              </li>
+            )}
           </ul>
         </nav>
       </header>
       <main>{children}</main>
+      <footer className="mt-16 text-center">
+        <NewsletterSignup />
+      </footer>
     </>
   );
 }

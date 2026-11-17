@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node';
+import type { LinksFunction, LoaderArgs, MetaFunction } from '@remix-run/node';
 import {
   Links,
   LiveReload,
@@ -6,9 +6,11 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react';
 
 import Layout from './components/Layout';
+import { getUserFromSession } from './data/auth.server';
 import mainStyles from './styles/main.css';
 import tailwindStyles from './styles/tailwind.css';
 
@@ -25,6 +27,8 @@ export const links: LinksFunction = () => [
 ];
 
 export default function App() {
+  const isLoggedIn = useLoaderData<typeof loader>();
+
   return (
     <html lang="en">
       <head>
@@ -32,7 +36,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-gradient-to-br from-slate-900 to-slate-800 h-screen text-slate-300">
-        <Layout>
+        <Layout isLoggedIn={isLoggedIn}>
           <Outlet />
         </Layout>
         <ScrollRestoration />
@@ -41,4 +45,9 @@ export default function App() {
       </body>
     </html>
   );
+}
+
+export async function loader({ request }: LoaderArgs) {
+  const userId = await getUserFromSession(request);
+  return !!userId;
 }
